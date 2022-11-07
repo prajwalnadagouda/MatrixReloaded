@@ -1,29 +1,62 @@
-import socketserver
+import socket
+import os
+from _thread import *
+from time import sleep
+from multiprocessing import Process
+import sys
+from threading import Thread
 
-class MyTCPHandler(socketserver.BaseRequestHandler):
-    """
-    The request handler class for our server.
+class server:
+    def __init__():
+        pass
 
-    It is instantiated once per connection to the server, and must
-    override the handle() method to implement communication to the
-    client.
-    """
+    def peer_tracker():
+        peer_list=[]
+        ServerSideSocket = socket.socket()
+        host = '127.0.0.1'
+        port = 2006
+        thread_count = 0
+        try:
+            ServerSideSocket.bind((host, port))
+        except socket.error as e:
+            print(str(e))
+            pass
+        print('Socket is listening..')
+        ServerSideSocket.listen(5)
+        def multi_threaded_client(connection,address):
+            connection.send(str.encode('Server is working:'))
+            while True:
+                try:
+                    data = connection.recv(2048)
+                    response = 'Server message: ' + data.decode('utf-8')
+                    if not data:
+                        break
+                    connection.sendall(str.encode(response))
+                except:
+                    print("connection closed")
+            connection.close()
+            peer_list.remove(address)
+            print(peer_list)
+        while True:
+            Client, address = ServerSideSocket.accept()
+            peer_list.append(address)
+            Client.sendall(b"Approved")
+            print('Connected to: ' + address[0] + ':' + str(address[1]))
+            start_new_thread(multi_threaded_client, (Client, address))
+            thread_count += 1
+            print('Thread Number: ' + str(thread_count))
+            print(peer_list)
+        ServerSideSocket.close()
+    
+    def peer_work_distributer():
+        pass
 
-    def handle(self):
-        # self.request is the TCP socket connected to the client
-        self.data = self.request.recv(1024).strip()
-        print("{} wrote:".format(self.client_address[0]))
-        print("{} wrote:".format(self.src_port[0]))
-        print(self.data)
-        # just send back the same data, but upper-cased
-        self.request.sendall(self.data.upper())
+peer_tracker = Thread(target=server.peer_tracker, daemon=True, name='peer tracker')
+peer_tracker.start()
+# wasss = Thread(target=server.peer_work_distributer, daemon=True, name='distribute work')
+# wasss.start()
 
-if __name__ == "__main__":
-    HOST, PORT = "localhost", 9999
+peer_tracker.join()
+# wasss.join()
 
-    # Create the server, binding to localhost on port 9999
-    server = socketserver.TCPServer((HOST, PORT), MyTCPHandler)
-
-    # Activate the server; this will keep running until you
-    # interrupt the program with Ctrl-C
-    server.serve_forever()
+# server.start()
