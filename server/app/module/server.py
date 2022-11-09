@@ -13,9 +13,8 @@ class server:
     def peer_tracker():
         peer_list=[]
         ServerSideSocket = socket.socket()
-        # host = '172.60.0.2'
+        host = '172.60.0.2'
         # host = '127.0.0.1'
-        host = [l for l in ([ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][:1], [[(s.connect(('8.8.8.8', 53)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]]) if l][0][0]
         port = 2006
         thread_count = 0
         try:
@@ -62,6 +61,5 @@ class server:
 
         # peer_tracker.join()
 # wasss.join()
-server.peer_tracker()
 
 # server.start()

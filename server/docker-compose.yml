@@ -1,0 +1,19 @@
+version: '2.3'
+services:
+    app:
+        build: ./app
+        # links:
+        #     - db
+        ports:
+            - "8088:5000"
+            - "2006:2006"
+        networks:
+            - servercmpe273
+
+networks:
+    servercmpe273:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.60.0.0/16
