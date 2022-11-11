@@ -42,7 +42,6 @@ class server:
         print("gone")
         print(self.peer_dict)
 
-
     def accept_peer(self):
         ServerSideSocket = socket.socket()
         host = [l for l in ([ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][:1], [[(s.connect(('8.8.8.8', 53)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]]) if l][0][0]
@@ -58,10 +57,14 @@ class server:
         while True:
             Client, address = ServerSideSocket.accept()
             Client.sendall(b"Approved")
-            data = Client.recv(2048)
-            data=data.decode('utf-8')
-            self.peer_dict[address]=data
-            self.peer_availability[address]=data
+            ip = Client.recv(2048)
+            ip = ip.decode('utf-8')
+            Client.sendall(b"Approved")
+            port = Client.recv(2048)
+            port = port.decode('utf-8')
+            self.peer_dict[(ip,address[1])]=port
+            self.peer_availability[(ip,address[1])]=port
+            address=(ip,address[1])
             print(self.peer_dict)
             print(self.peer_availability)
             print('Connected to: ' + address[0] + ':' + str(address[1]))

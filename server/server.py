@@ -22,7 +22,7 @@ class server:
                 response = 'Server message: ' + data
                 if not data:
                     break
-                print(response)
+                # print(response)
                 if(data == "PEER-DETAILS"):
                     print("Sharing details of a max of 7 peers")
                     res={}
@@ -61,10 +61,14 @@ class server:
         while True:
             Client, address = ServerSideSocket.accept()
             Client.sendall(b"Approved")
-            data = Client.recv(2048)
-            data=data.decode('utf-8')
-            self.peer_dict[address]=data
-            self.peer_availability[address]=data
+            ip = Client.recv(2048)
+            ip = ip.decode('utf-8')
+            Client.sendall(b"Approved")
+            port = Client.recv(2048)
+            port = port.decode('utf-8')
+            self.peer_dict[(ip,address[1])]=port
+            self.peer_availability[(ip,address[1])]=port
+            address=(ip,address[1])
             print(self.peer_dict)
             print(self.peer_availability)
             print('Connected to: ' + address[0] + ':' + str(address[1]))
@@ -77,7 +81,7 @@ class server:
         s= server()
         s.accept_peer()
     
-# s= server()
-# s.accept_peer()
+s= server()
+s.accept_peer()
 
 # server.start()
