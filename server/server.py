@@ -5,6 +5,7 @@ from time import sleep
 from multiprocessing import Process
 import sys
 from threading import Thread
+import json
 
 class server:
     peer_dict={}
@@ -17,10 +18,25 @@ class server:
         while True:
             try:
                 data = connection.recv(2048)
-                response = 'Server message: ' + data.decode('utf-8')
+                data = data.decode('utf-8')
+                response = 'Server message: ' + data
                 if not data:
                     break
-                connection.sendall(str.encode(response))
+                print(response)
+                if(data == "PEER-DETAILS"):
+                    print("Sharing details of a max of 7 peers")
+                    res={}
+                    count=0
+                    for i in self.peer_availability:
+                        res[i]=self.peer_availability[i]
+                        count+=1
+                        if(count==7):
+                            break
+                    response=str(res)
+                    print(response)
+                    connection.sendall((str.encode(response)))
+                else:
+                    connection.sendall(str.encode(response))
             except:
                 print("connection closed")
         connection.close()
@@ -48,28 +64,20 @@ class server:
             data = Client.recv(2048)
             data=data.decode('utf-8')
             self.peer_dict[address]=data
-            self.peer_availability[address]=1
+            self.peer_availability[address]=data
             print(self.peer_dict)
             print(self.peer_availability)
             print('Connected to: ' + address[0] + ':' + str(address[1]))
             start_new_thread(server.multi_threaded_client, (self, Client, address))
             thread_count += 1
             print('Thread Number: ' + str(thread_count))
-            # break
         ServerSideSocket.close()
-    
-#     def peer_work_distributer():
-#         pass
-    def starter():
-        server.accept_peer()
-        # accept_peer = Thread(target=server.accept_peer, daemon=True, name='peer tracker')
-        # accept_peer.start()
-        # # wasss = Thread(target=server.peer_work_distributer, daemon=True, name='distribute work')
-        # # wasss.start()
 
-        # accept_peer.join()
-# wasss.join()
-s= server()
-s.accept_peer()
+    def starter():
+        s= server()
+        s.accept_peer()
+    
+# s= server()
+# s.accept_peer()
 
 # server.start()
