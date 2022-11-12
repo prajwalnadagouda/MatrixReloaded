@@ -13,7 +13,7 @@ class server:
     def __init__(self):
         pass
 
-    def multi_threaded_client(self,connection,address):
+    def peer_communication(self,connection,address):
         connection.send(str.encode('Server is working:'))
         while True:
             try:
@@ -29,8 +29,9 @@ class server:
                     count=0
                     for i in self.peer_availability:
                         res[i]=self.peer_availability[i]
+                        # self.peer_availability.pop(i)
                         count+=1
-                        if(count==7):
+                        if(count==8):
                             break
                     response=str(res)
                     print(response)
@@ -41,7 +42,10 @@ class server:
                 print("connection closed")
         connection.close()
         self.peer_dict.pop(address)
-        self.peer_availability.pop(address)
+        try:
+            self.peer_availability.pop(address)
+        except:
+            pass
         print("gone")
         print(self.peer_dict)
 
@@ -72,7 +76,7 @@ class server:
             print(self.peer_dict)
             print(self.peer_availability)
             print('Connected to: ' + address[0] + ':' + str(address[1]))
-            start_new_thread(server.multi_threaded_client, (self, Client, address))
+            start_new_thread(server.peer_communication, (self, Client, address))
             thread_count += 1
             print('Thread Number: ' + str(thread_count))
         ServerSideSocket.close()
