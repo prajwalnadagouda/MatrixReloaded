@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Matrix Reloaded</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/animate.css/animate.min.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="assets/css/style.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Selecao - v4.9.1
+  * Template URL: https://bootstrapmade.com/selecao-bootstrap-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top d-flex align-items-center  header-transparent ">
+    <div class="container d-flex align-items-center justify-content-between">
+
+      <div class="logo">
+        <h1><a href="index.html">Matrix Reloaded</a></h1>
+        
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+      </div>
+     
+
+      
+
+    </div>
+  </header><!-- End Header -->
+
+  <!-- ======= Hero Section ======= -->
+  <section id="hero" class="d-flex flex-column justify-content-end align-items-center">
+    <div id="heroCarousel" data-bs-interval="5000" class="container carousel carousel-fade" data-bs-ride="carousel" >
+
+     
+       <div class="carousel-item active" >
+      <section>
+        <!-- <a href="#" class="logo"
+          ><img alt="logo" src="assets/img/Matrix.png" height="150px"
+        /></a> -->
+          
+        <form class="form">
+          <div class = "parent">
+            <div class = "child">
+              <label for="matrix1" style="color: white; font-family: Open Sans;" >First Matrix Elements</label>
+              <br />
+              <textarea
+              style="border-radius: 10px;"
+                id="matrix1"
+                type="text"
+                rows="4"
+                cols="50"
+                placeholder="Enter matrix as list of lists"
+              ></textarea>
+            </div>
+            <div class="child">
+              <label for="matrix2" style="color: white;">Second Matrix Elements</label>
+              <br />
+              <textarea
+              style="border-radius: 10px;"
+                id="matrix2"
+                type="text"
+                rows="4"
+                cols="50"
+                placeholder="Enter matrix as list of lists"
+              ></textarea>
+            </div>
+              <p id="output1" style="color: rgb(114, 112, 112);position: fixed; font-weight:900;align-items: center;position: absolute;
+              top: 370px;
+              right: 700px;
+              width: 400px;
+              height: 100px;"></p>
+              <p id="output2" style="color: rgb(114, 112, 112);font-weight:900;position: fixed; align-items: center;position: absolute;
+              top: 370px;
+              right:220px;
+              width: 400px;
+              height: 100px;"></p>
+          <!-- <p class="submit"> -->
+            <div style="position: fixed; align-items: center;position: absolute;
+            top: 450px;
+            right: 550px;
+            width: 200px;
+            height: 100px;">
+              <!-- <div> -->
+                
+              <!-- </div> -->
+              
+              <input class="button-89"  value = "Submit" role="button" type="button" onclick="validate()">
+              <input class="button-89"   value = "Clear" role="button" type="button" onclick="clears()">
+            </div>
+            <br>
+            <br>
+          <!-- </div> -->
+          
+         
+          <div id="results" style="display: none;">
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <label for="result" style="color: white; font-family: Open Sans;" >Result</label>
+            <br />
+            <textarea
+            style="border-radius: 10px;"
+
+              id="result"
+              type="text"
+              rows="4"
+              cols="50"
+            ></textarea>
+          </div>
+        </form>
+      </section>
+      </div>
+
+    </div>
+<div>
+  
+</div>
+    <svg class="hero-waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28 " preserveAspectRatio="none">
+      <defs>
+        <path id="wave-path" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z">
+      </defs>
+      <g class="wave1">
+        <use xlink:href="#wave-path" x="50" y="3" fill="rgba(255,255,255, .1)">
+      </g>
+      <g class="wave2">
+        <use xlink:href="#wave-path" x="50" y="0" fill="rgba(255,255,255, .2)">
+      </g>
+      <g class="wave3">
+        <use xlink:href="#wave-path" x="50" y="9" fill="#fff">
+      </g>
+    </svg>
+
+  </section>
+
+  <main id="main">
+
+   
+    <!-- ======= Team Section ======= -->
+    <!-- <section id="team" class="team">
+      <div class="container">
+
+        <div class="section-title" data-aos="zoom-out">
+          <h2>Team</h2>
+          <p>Our Hardworking Team</p>
+        </div>
+
+        <div class="row">
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch">
+            <div class="member" data-aos="fade-up">
+              <div class="member-img">
+                <img src="assets/img/team/team-1.jpg" class="img-fluid" alt="">
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+              <div class="member-info">
+                <h4>Walter White</h4>
+                <span>Chief Executive Officer</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch">
+            <div class="member" data-aos="fade-up" data-aos-delay="100">
+              <div class="member-img">
+                <img src="assets/img/team/team-2.jpg" class="img-fluid" alt="">
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+              <div class="member-info">
+                <h4>Sarah Jhonson</h4>
+                <span>Product Manager</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch">
+            <div class="member" data-aos="fade-up" data-aos-delay="200">
+              <div class="member-img">
+                <img src="assets/img/team/team-3.jpg" class="img-fluid" alt="">
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+              <div class="member-info">
+                <h4>William Anderson</h4>
+                <span>CTO</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch">
+            <div class="member" data-aos="fade-up" data-aos-delay="300">
+              <div class="member-img">
+                <img src="assets/img/team/team-4.jpg" class="img-fluid" alt="">
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+              <div class="member-info">
+                <h4>Amanda Jepson</h4>
+                <span>Accountant</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section> -->
+    <!-- End Team Section -->
+
+    <!-- ======= Contact Section ======= -->
+    <!-- <section id="contact" class="contact">
+      <div class="container">
+
+        <div class="section-title" data-aos="zoom-out">
+          <h2>Contact</h2>
+          <p>Contact Us</p>
+        </div>
+
+        <div class="row mt-5">
+
+          <div class="col-lg-4" data-aos="fade-right">
+            <div class="info">
+              <div class="address">
+                <i class="bi bi-geo-alt"></i>
+                <h4>Location:</h4>
+                <p>A108 Adam Street, New York, NY 535022</p>
+              </div>
+
+              <div class="email">
+                <i class="bi bi-envelope"></i>
+                <h4>Email:</h4>
+                <p>info@example.com</p>
+              </div>
+
+              <div class="phone">
+                <i class="bi bi-phone"></i>
+                <h4>Call:</h4>
+                <p>+1 5589 55488 55s</p>
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="col-lg-8 mt-5 mt-lg-0" data-aos="fade-left">
+
+            <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+              <div class="row">
+                <div class="col-md-6 form-group">
+                  <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
+                </div>
+                <div class="col-md-6 form-group mt-3 mt-md-0">
+                  <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
+                </div>
+              </div>
+              <div class="form-group mt-3">
+                <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
+              </div>
+              <div class="form-group mt-3">
+                <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
+              </div>
+              <div class="my-3">
+                <div class="loading">Loading</div>
+                <div class="error-message"></div>
+                <div class="sent-message">Your message has been sent. Thank you!</div>
+              </div>
+              <div class="text-center"><button type="submit">Send Message</button></div>
+            </form>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section> -->
+    <!-- End Contact Section -->
+
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer">
+    <div class="container">
+      <h3>Matrix Reloaded</h3>
+      <!-- <p>Et aut eum quis fuga eos sunt ipsa nihil. Labore corporis magni eligendi fuga maxime saepe commodi placeat.</p> -->
+      <div class="social-links">
+        <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
+        <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+        <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+        <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
+        <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+      </div>
+      <div class="copyright">
+        &copy; Copyright <strong><span>Matrix</span></strong>. All Rights Reserved
+      </div>
+      <div class="credits">
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/selecao-bootstrap-template/ -->
+        Designed by <a href="">us</a>
+      </div>
+    </div>
+  </footer><!-- End Footer -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  
+  <!-- Template Main JS File -->
+  <script
+      type="text/javascript"
+      src="https://code.jquery.com/jquery-1.7.1.min.js"
+    ></script>
+
+    <script>
+      
+      function clears() {
+       
+        document.getElementById("matrix1").value = "";
+        document.getElementById("matrix2").value = "";
+        document.getElementById("output1").style.display = "none";
+        document.getElementById("output2").style.display = "none"
+      }
+      function validate() {
+        // console.log("asa")
+        var output1 = "";
+        var output2 = "";
+        document.getElementById("output1").innerHTML = output1;
+        document.getElementById("output2").innerHTML = output2;
+        document.getElementById("output1").style.display = "block";
+        document.getElementById("output2").style.display = "block"
+        var $firstMatrix = document.getElementById("matrix1").value;
+        var $secondMatrix = document.getElementById("matrix2").value;
+        if ($firstMatrix == "") {
+          output1 = "First matrix elements can not be blank.";
+        } else if ($secondMatrix == "") {
+          output2 = "Second matrix elements can not be blank.";
+        }
+        if (output1 != "") {
+          document.getElementById("output1").innerHTML = output1;
+          return;
+        } else if (output2 != "") {
+          document.getElementById("output2").innerHTML = output2;
+          return;
+        }
+        try {
+          $firstMatrix = JSON.parse($firstMatrix);
+        } catch {
+          output1 = "First matrix does not have matching brackets or missing commas";
+        }
+
+        try {
+          $secondMatrix = JSON.parse($secondMatrix);
+        } catch {
+          output2 = "Second matrix does not have matching brackets or missing commas";
+        }
+        if (output1 != "") {
+          document.getElementById("output1").innerHTML = output1;
+          return;
+        } else if (output2 != "") {
+          document.getElementById("output2").innerHTML = output2;
+          return;
+        }
+        valid_one = $firstMatrix.every(
+          (a) => Array.isArray(a) && a.every((item) => typeof item === "number")
+        );
+        valid_two = $secondMatrix.every(
+          (a) => Array.isArray(a) && a.every((item) => typeof item === "number")
+        );
+
+        if (valid_one != true) {
+          output1 = "First matrix is not a valid matrix fromart";
+        }
+        if (valid_two != true) {
+          output2 = "Second matrix is not a valid matrix fromart";
+        }
+        if (output1 != "") {
+          document.getElementById("output1").innerHTML = output1;
+          return;
+        } else if (output2 != "") {
+          document.getElementById("output2").innerHTML = output2;
+          return;
+        }
+        var rows_firstMatrix = $firstMatrix.length;
+        var rows_seocndMatrix = $secondMatrix.length;
+        var cols_firstMatrix = $firstMatrix[0].length;
+        var cols_seocndMatrix = $secondMatrix[0].length;
+        if (rows_seocndMatrix != cols_firstMatrix) {
+          output1 =
+            "The matrices does not have format suitable to perform calculation";
+          
+        }
+        if (rows_seocndMatrix != cols_firstMatrix) {
+          output2 =
+            "The matrices does not have format suitable to perform calculation";
+          
+        }
+        if (output1 != "") {
+          document.getElementById("output1").innerHTML = output1;
+          // return;
+        } 
+        if (output2 != "") {
+          document.getElementById("output2").innerHTML = output2;
+          // return;
+        }
+        if (output1 != "" || output2!= "")
+        {
+          return;
+        }
+        const same_rows_first = $firstMatrix.every(
+          (x) => x.length === $firstMatrix[0].length
+        );
+        const same_rows_second = $secondMatrix.every(
+          (x) => x.length === $secondMatrix[0].length
+        );
+        if (same_rows_first != true) {
+          output1 = "First matrix does not have rows of same length";
+        }
+        if (same_rows_second != true) {
+          output2 = "Second matrix does not have rows of same length";
+        }
+        if (output1 != "") {
+          document.getElementById("output1").innerHTML = output1;
+          return;
+        } else if (output2 != "") {
+          document.getElementById("output2").innerHTML = output2;
+          return;
+        }
+        document.getElementById('results').style.display = "block";
+
+      }
+    </script>
+</body>
+
+</html>
+
