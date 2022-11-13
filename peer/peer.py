@@ -241,9 +241,6 @@ class peer:
 
 
 p= peer()
-x = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
-y = [[-1, 0, 0], [0, -1, 0], [0, 0, -1]]
-print(p.peer_calculation(x,y))
 peer_tracker = Thread(target=p.connect_server, daemon=True, name='peer tracker')
 peer_tracker.start()
 wasss = Thread(target=p.peer_compute, daemon=True, name='hello boy')
