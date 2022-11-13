@@ -5,7 +5,7 @@ services:
         # links:
         #     - db
         ports:
-            - "8088:5000"
+            - "8080:5000"
             - "2006:2006"
         networks:
             - servercmpe273
