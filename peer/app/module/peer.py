@@ -12,6 +12,7 @@ import numpy as np
 class peer:
     server_connection=0
     peers_assigned=0
+    p=0
 
     def start_compute(self):
         config = configparser.ConfigParser()
@@ -197,14 +198,12 @@ class peer:
         return result[: n, : n]
 
     def peer_compute(self):
-        # return
         config = configparser.ConfigParser()
         config.read('info.ini')
         ClientMultiSocket = socket.socket()
         ServerSideSocket = socket.socket()
         host = [l for l in ([ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][:1], [[(s.connect(('8.8.8.8', 53)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]]) if l][0][0]
         print(host)
-        # port = int(config['ports']['2008'])
         port = 2008
         thread_count = 0
         try:
@@ -213,41 +212,45 @@ class peer:
             print(str(e))
         print('Socket is listening for peers..')
         ServerSideSocket.listen(5)
-        
-        Client, address = ServerSideSocket.accept()
-        # return str(Client)
-        def multi_threaded_client(connection,address):
+        while True:
+            Client, address = ServerSideSocket.accept()
+            # return str(Client)
             while True:
                 try:
                     Client.sendall(b"Approved by peer")
                     X = Client.recv(2048)
                     X = X.decode('utf-8')
                     X = ast.literal_eval((X))
-                    connection.sendall(str.encode("M1"))
+                    Client.sendall(str.encode("M1"))
                     Y = Client.recv(2048)
                     Y = Y.decode('utf-8')
                     Y = ast.literal_eval((Y))
-                    connection.sendall(str.encode(str(self.peer_calculation(X,Y).tolist())))
+                    Client.sendall(str.encode(str(self.peer_calculation(X,Y).tolist())))
                     # connection.sendall(str.encode(str(Y)))
                     stat = Client.recv(2048)
                     # print("y->",X+Y)
                 except:
                     continue
                     print("connection closed")
-            connection.close()
-        
-        start_new_thread(multi_threaded_client, (Client, address))
+            Client.close()
+            # multi_threaded_client(Client,address)
+        # start_new_thread(multi_threaded_client, (Client, address))
         ServerSideSocket.close()
 
-    def starter():
+    
+    def peer_starter():
         # return "asa"
-        p= peer()
         peer_tracker = Thread(target=p.connect_server, daemon=True, name='peer tracker')
         peer_tracker.start()
         wasss = Thread(target=p.peer_compute, daemon=True, name='hello boy')
         wasss.start()
         sleep(5)
-        p.fetch_peers()
-        return p.start_compute()
         peer_tracker.join()
         wasss.join()
+
+    def cal_starter():
+        sleep(2)
+        p.fetch_peers()
+        return p.start_compute()
+
+p= peer()

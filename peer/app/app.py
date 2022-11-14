@@ -7,15 +7,24 @@ app = Flask(__name__)
 def hello():
     return 'This Compose/Flask demo has been viewed time(s)'
 
-@app.route('/start')
+@app.route('/calstart')
 def start():
     # peer_tracker = Thread(target=server.peer_tracker, daemon=True, name='peer tracker')
     # starting= Thread(target=peer.peer.starter(), daemon=True, name='distribute work')
     # starting.start()
     # starting.join()
     # return("wassup")
-    return(peer.peer.starter())
+    return(peer.peer.cal_starter())
     # return render_template('index.html', name = "Connected")
+
+@app.route('/peerstart')
+def calstart():
+    # peer_tracker = Thread(target=server.peer_tracker, daemon=True, name='peer tracker')
+    # starting= Thread(target=peer.peer.starter(), daemon=True, name='distribute work')
+    # starting.start()
+    # starting.join()
+    # return("wassup")
+    return(peer.peer.peer_starter())
 
 @app.route('/connect')
 def connect_server():
