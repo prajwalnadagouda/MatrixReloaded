@@ -12,4 +12,4 @@ COPY ./app.py /app
 COPY ./templates /app/templates
 COPY ./module /app/
 
-CMD [ "python", "app.py" ]
+CMD [ "python","-u", "app.py" ]

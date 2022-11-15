@@ -20,10 +20,10 @@ class peer:
         peers=self.peers_assigned
         print("start compute")
         print(peers)
-        peer_connections={}
+        peer_connections=[]
         lock_connections={}
         for peer in peers:
-            peer_connections[peer[0]]=peers[peer]
+            peer_connections.append((peer[0],peers[peer]))
             lock_connections[peers[peer]]=0
 
         def parallel_calls(lock_connections,sdic, num, host1, port1,X,Y):
@@ -82,10 +82,9 @@ class peer:
             print("list1",list1)
             print("list2",list2)
             # return str(peer_connections)
-            peerkeys=list(peer_connections.keys())
             for temp in range(1,8):
-                peer_turn_ip=peerkeys[temp%peer_count]
-                peer_turn_port=peer_connections[peer_turn_ip]
+                peer_turn_ip=peer_connections[temp%peer_count][0]
+                peer_turn_port=peer_connections[temp%peer_count][1]
                 # a1=parallel_calls(lock_connections, sdic, temp, peer_turn_ip, peer_turn_port,list1[temp-1].tolist(), list2[temp-1].tolist())
                 # # return str(a1)
                 # a2=parallel_calls(lock_connections, sdic, temp+2, peer_turn_ip, peer_turn_port,list1[temp-1].tolist(), list2[temp-1].tolist())
@@ -218,6 +217,7 @@ class peer:
         ClientMultiSocket.listen(5)
         while True:
             Client, address = ClientMultiSocket.accept()
+            print("connected to",Client)
             try:
                 Client.sendall(b"Approved by peer")
                 X = Client.recv(2048)
@@ -251,7 +251,6 @@ class peer:
         wasss.join()
 
     def cal_starter():
-        sleep(2)
         p.fetch_peers()
         return p.start_compute()
 

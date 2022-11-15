@@ -15,4 +15,6 @@ services:
     - 59527:2008
     volumes:
     - ./info.ini:/app/info.ini
+    environment:
+    - PYTHONUNBUFFERED=1
 version: '2.2'
