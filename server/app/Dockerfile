@@ -14,4 +14,5 @@ COPY ./module /app
 
 # EXPOSE 2006
 
-CMD [ "python", "app.py" ]
+# CMD [ "python", "app.py" ]
+CMD [ "python", "server.py" ]

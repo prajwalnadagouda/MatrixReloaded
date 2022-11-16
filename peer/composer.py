@@ -44,6 +44,8 @@ services:
             - peercmpe273
         volumes:
             - ./info.ini:/app/info.ini
+        environment:
+            - PYTHONUNBUFFERED=1
 
 networks:
     peercmpe273:
