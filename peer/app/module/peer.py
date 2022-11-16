@@ -14,7 +14,10 @@ class peer:
     peers_assigned=0
     p=0
 
-    def start_compute(self):
+    def start_compute(self,X,Y):
+        X=ast.literal_eval(X)
+        Y=ast.literal_eval(Y)
+        print("123456789",X,Y)
         config = configparser.ConfigParser()
         config.read('info.ini')
         peers=self.peers_assigned
@@ -109,10 +112,8 @@ class peer:
             result[: m, m:] = sdic[1] + sdic[2]
             result[m:, : m] = sdic[3] + sdic[4]
             result[m:, m:] = sdic[1] + sdic[5] - sdic[3] - sdic[7]
-            return str(result[: n, : n])
-    
-        X=[[1, 0, 0,1], [0, 1, 0,1], [0, 0, 1,1], [0, 0, 1,1]]
-        Y=[[-1, 0, 0,1], [0, -1, 0,1], [0, 0, -1,1], [0, 0, -1,1]]
+            return str(result[: n, : n].tolist())
+
         ans=strassen_algorithm(lock_connections,peer_connections,X,Y)
         return str(ans)
 
@@ -201,7 +202,6 @@ class peer:
         return result[: n, : n]
 
     def peer_compute(self):
-        # return "was"
         config = configparser.ConfigParser()
         config.read('info.ini')
         ClientMultiSocket = socket.socket()
@@ -250,8 +250,8 @@ class peer:
         peer_tracker.join()
         wasss.join()
 
-    def cal_starter():
+    def cal_starter(X,Y):
         p.fetch_peers()
-        return p.start_compute()
+        return p.start_compute(X,Y)
 
 p= peer()

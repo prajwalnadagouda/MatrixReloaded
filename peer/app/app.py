@@ -1,5 +1,7 @@
 import peer
-from flask import Flask, render_template
+from flask import Flask, render_template, request
+import json
+from threading import Thread
 
 app = Flask(__name__)
 
@@ -8,7 +10,7 @@ def hello():
     return 'This Compose/Flask demo has been viewed time(s)'
 
 @app.route('/calstart')
-def start():
+def calstart():
     # peer_tracker = Thread(target=server.peer_tracker, daemon=True, name='peer tracker')
     # starting= Thread(target=peer.peer.starter(), daemon=True, name='distribute work')
     # starting.start()
@@ -18,7 +20,7 @@ def start():
     # return render_template('index.html', name = "Connected")
 
 @app.route('/peerstart')
-def calstart():
+def start():
     # peer_tracker = Thread(target=server.peer_tracker, daemon=True, name='peer tracker')
     # starting= Thread(target=peer.peer.starter(), daemon=True, name='distribute work')
     # starting.start()
@@ -29,8 +31,25 @@ def calstart():
 @app.route('/connect')
 def connect_server():
     print("hiiiiii")
-    peer.connect_server()
     return render_template('index.html', name = "Connected")
 
+@app.route('/connected', methods = ['POST', 'GET'])
+def connect():
+    print ("adasdas")
+    # print(list(request))
+    data = request.get_json()
+    X=data['firstMatrix']
+    Y=data['secondMatrix']
+    if request.method == "POST":
+        val=(peer.peer.cal_starter(X,Y))
+        print("bhai")
+        print(val)
+        # return val
+        return json.dumps(val)
+    return "hi"
+
 if __name__ == "__main__":
+    peer_starter = Thread(target=peer.peer.peer_starter, daemon=True, name='peer tracker')
+    peer_starter.start()
     app.run(host="0.0.0.0", debug=True)
+    peer_starter.join()
