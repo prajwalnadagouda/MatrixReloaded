@@ -1,7 +1,6 @@
 import peer
 from flask import Flask, render_template, request
 import json
-from threading import Thread
 
 app = Flask(__name__)
 
@@ -48,8 +47,7 @@ def connect():
         return json.dumps(val)
     return "hi"
 
+    return ("hiiiiii")
+
 if __name__ == "__main__":
-    peer_starter = Thread(target=peer.peer.peer_starter, daemon=True, name='peer tracker')
-    peer_starter.start()
     app.run(host="0.0.0.0", debug=True)
-    peer_starter.join()
