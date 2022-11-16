@@ -9,6 +9,8 @@ services:
             - "2006:2006"
         networks:
             - servercmpe273
+        environment:
+            - PYTHONUNBUFFERED=1
 
 networks:
     servercmpe273:

@@ -10,6 +10,7 @@ RUN apt-get install telnet
 
 COPY ./app.py /app
 COPY ./templates /app/templates
+COPY ./static /app/static
 COPY ./module /app/
 
-CMD [ "python", "app.py" ]
+CMD [ "python","-u", "app.py" ]

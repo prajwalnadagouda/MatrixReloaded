@@ -5,10 +5,13 @@ from time import sleep
 from multiprocessing import Process
 import sys
 from threading import Thread
+import json
 
 class server:
     peer_dict={}
     peer_availability={}
+    def __init__(self):
+        pass
 
     def peer_communication(self,connection,address):
         connection.send(str.encode('Server is working:'))
@@ -19,16 +22,16 @@ class server:
                 response = 'Server message: ' + data
                 if not data:
                     break
-                print(response)
+                # print(response)
                 if(data == "PEER-DETAILS"):
                     print("Sharing details of a max of 7 peers")
                     res={}
                     count=0
                     for i in self.peer_availability:
                         res[i]=self.peer_availability[i]
-                        self.peer_availability.pop(i)
+                        # self.peer_availability.pop(i)
                         count+=1
-                        if(count==7):
+                        if(count==8):
                             break
                     response=str(res)
                     print(response)
@@ -45,6 +48,7 @@ class server:
             pass
         print("gone")
         print(self.peer_dict)
+
 
     def accept_peer(self):
         ServerSideSocket = socket.socket()
@@ -80,3 +84,10 @@ class server:
     def starter():
         s= server()
         s.accept_peer()
+
+    def starter():
+        s= server()
+        s.accept_peer()
+
+s= server()
+s.accept_peer()

@@ -10,24 +10,24 @@
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon">
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="{{ url_for('static', filename='assets/img/favicon.png') }}" rel="icon">
+  <link href="{{ url_for('static', filename='assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="assets/vendor/animate.css/animate.min.css" rel="stylesheet">
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/animate.css/animate.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/aos/aos.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
 
   <!-- Template Main CSS File -->
-  <link href="assets/css/style.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/css/style.css') }}" rel="stylesheet">
 
   <!-- =======================================================
   * Template Name: Selecao - v4.9.1
@@ -130,7 +130,7 @@
             <br>
             <label for="result" style="color: white; font-family: Open Sans;" >Result</label>
             <br />
-            <textarea
+            <textarea id="inner"
             style="border-radius: 10px;"
 
               id="result"
@@ -362,7 +362,7 @@
     ></script>
 
     <script>
-      
+      var name = '{{ name }}'
       function clears() {
        
         document.getElementById("matrix1").value = "";
@@ -371,6 +371,21 @@
         document.getElementById("output2").style.display = "none"
       }
       function validate() {
+        var xhr = new XMLHttpRequest();
+        var url= "http://localhost:"+name+"/connected";
+        // var url = "http://localhost:".{{name}}."/connected";
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                print(xhr.responseText)
+                var json = JSON.parse(xhr.responseText);
+                console.log(json);
+                document.getElementById("results").style.display = "block";
+
+                document.getElementById("inner").innerHTML = json;
+            }
+        };
         // console.log("asa")
         var output1 = "";
         var output2 = "";
@@ -475,8 +490,11 @@
           document.getElementById("output2").innerHTML = output2;
           return;
         }
-        document.getElementById('results').style.display = "block";
-
+        json_request = {
+          "firstMatrix" : JSON.stringify($firstMatrix),
+          "secondMatrix" : JSON.stringify($secondMatrix)
+        }
+        xhr.send(JSON.stringify(json_request));
       }
     </script>
 </body>
