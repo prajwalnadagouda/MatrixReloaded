@@ -2,6 +2,7 @@ import peer
 from flask import Flask, render_template, request
 import json
 from threading import Thread
+import configparser
 
 app = Flask(__name__)
 
@@ -30,8 +31,12 @@ def start():
 
 @app.route('/connect')
 def connect_server():
+    config = configparser.ConfigParser()
+    config.read('info.ini')
+    val=config['ports']['5000']
+
     print("hiiiiii")
-    return render_template('index.html', name = "Connected")
+    return render_template('index.html', name =val)
 
 @app.route('/connected', methods = ['POST', 'GET'])
 def connect():

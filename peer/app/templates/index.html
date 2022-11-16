@@ -362,7 +362,7 @@
     ></script>
 
     <script>
-      
+      var name = '{{ name }}'
       function clears() {
        
         document.getElementById("matrix1").value = "";
@@ -372,7 +372,8 @@
       }
       function validate() {
         var xhr = new XMLHttpRequest();
-        var url = "http://localhost:10565/connected";
+        var url= "http://localhost:"+name+"/connected";
+        // var url = "http://localhost:".{{name}}."/connected";
         xhr.open("POST", url, true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.onreadystatechange = function () {
