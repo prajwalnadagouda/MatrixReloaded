@@ -369,6 +369,8 @@
         document.getElementById("matrix2").value = "";
         document.getElementById("output1").style.display = "none";
         document.getElementById("output2").style.display = "none"
+        document.getElementById("results").style.display = "none"
+
       }
       function validate() {
         var xhr = new XMLHttpRequest();
@@ -378,7 +380,7 @@
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4 && xhr.status === 200) {
-                print(xhr.responseText)
+                // print(xhr.responseText)
                 var json = JSON.parse(xhr.responseText);
                 console.log(json);
                 document.getElementById("results").style.display = "block";
