@@ -35,25 +35,26 @@ def connect_server():
     config.read('info.ini')
     val=config['ports']['5000']
 
-    print("hiiiiii")
+    # print("hiiiiii")
     return render_template('index.html', name =val)
 
 @app.route('/connected', methods = ['POST', 'GET'])
 def connect():
-    print ("adasdas")
+    # print ("adasdas")
     # print(list(request))
     data = request.get_json()
     X=data['firstMatrix']
     Y=data['secondMatrix']
     if request.method == "POST":
         val=(peer.peer.cal_starter(X,Y))
-        print("bhai")
+        print(val["ans"])
+        print(val["time_taken"])
         print(val)
         # return val
         return json.dumps(val)
-    return "hi"
+    # return "hi"
 
-    return ("hiiiiii")
+    # return ("hiiiiii")
 
 if __name__ == "__main__":
     peer_begin = Thread(target=peer.peer.peer_starter, daemon=True, name='peer tracker')
