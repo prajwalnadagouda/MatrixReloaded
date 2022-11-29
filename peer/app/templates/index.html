@@ -80,6 +80,11 @@
                 cols="50"
                 placeholder="Enter matrix as list of lists"
               ></textarea>
+              <p id="output1" style="color: rgb(114, 112, 112); font-weight:900;align-items: center;
+              top: 370px;
+              right: 700px;
+              width: 400px;
+              height: 50px;"></p>
             </div>
             <div class="child">
               <label for="matrix2" style="color: white;">Second Matrix Elements</label>
@@ -92,23 +97,16 @@
                 cols="50"
                 placeholder="Enter matrix as list of lists"
               ></textarea>
-            </div>
-              <p id="output1" style="color: rgb(114, 112, 112);position: fixed; font-weight:900;align-items: center;position: absolute;
-              top: 370px;
-              right: 700px;
-              width: 400px;
-              height: 100px;"></p>
-              <p id="output2" style="color: rgb(114, 112, 112);font-weight:900;position: fixed; align-items: center;position: absolute;
+              <p id="output2" style="color: rgb(114, 112, 112);font-weight:900; align-items: center;
               top: 370px;
               right:220px;
               width: 400px;
-              height: 100px;"></p>
+              height: 50px;"></p>
+            </div>
+              
+             
           <!-- <p class="submit"> -->
-            <div style="position: fixed; align-items: center;position: absolute;
-            top: 450px;
-            right: 550px;
-            width: 200px;
-            height: 100px;">
+            <div style=" align-items: center;">
               <!-- <div> -->
                 
               <!-- </div> -->
@@ -122,12 +120,6 @@
           
          
           <div id="results" style="display: none;">
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
             <label for="result" style="color: white; font-family: Open Sans;" >Result</label>
             <br />
             <textarea id="inner"
@@ -138,7 +130,18 @@
               rows="4"
               cols="50"
             ></textarea>
+            <br>
+            <br>
+            <br>
+            <div style="font-weight: 900;">
+              <p id ="inner_1"></p>
+              <p id ="inner_2"></p>
+            </div>
+            
           </div>
+
+         
+          
         </form>
       </section>
       </div>
@@ -382,10 +385,14 @@
             if (xhr.readyState === 4 && xhr.status === 200) {
                 // print(xhr.responseText)
                 var json = JSON.parse(xhr.responseText);
-                console.log(json);
+                console.log(json["ans"]);
+                console.log(json["time_taken"]);
                 document.getElementById("results").style.display = "block";
-
-                document.getElementById("inner").innerHTML = json;
+                var result_1= "Time taken to calculate the result by distributing the load among peers:  " + json["time_taken"] + " sec"
+                var result_2= "Time taken to calculate the result by not distributing the load among peers:  " + json["time_taken_trad"] + " sec"
+                document.getElementById("inner").innerHTML = json["ans"];
+                document.getElementById("inner_1").innerHTML = result_1;
+                document.getElementById("inner_2").innerHTML = result_2;
             }
         };
         // console.log("asa")

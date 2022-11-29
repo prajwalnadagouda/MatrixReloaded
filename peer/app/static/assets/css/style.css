@@ -430,7 +430,7 @@ h6 {
 }
 
 #hero p {
-  width: 80%;
+  /* width: 80%; */
   -webkit-animation-delay: 0.4s;
   animation-delay: 0.4s;
   /* margin: 0 auto 30px auto; */
@@ -476,7 +476,7 @@ h6 {
 
 @media (min-width: 1024px) {
   #hero p {
-    width: 60%;
+    /* width: 60%; */
   }
 
   #hero .carousel-control-prev,

@@ -8,6 +8,7 @@ import sys
 import json
 import ast
 import numpy as np
+import time
 
 class peer:
     server_connection=0
@@ -41,13 +42,13 @@ class peer:
             except socket.error as e:
                 print(str(e))
             
-            res = peer_connect.recv(1024)
+            res = peer_connect.recv(4096)
             res = res.decode('utf-8')
             if(res=="Approved by peer"):
                 peer_connect.send(bytes(str(X), 'utf-8'))
-                ans=peer_connect.recv(2048)
+                ans=peer_connect.recv(4096)
                 peer_connect.send(bytes(str(Y), 'utf-8'))
-                ans=peer_connect.recv(2048)
+                ans=peer_connect.recv(4096)
                 ans=ans.decode('utf-8')
                 peer_connect.send(bytes("done", 'utf-8'))
                 print(ans)
@@ -113,16 +114,39 @@ class peer:
             result[m:, : m] = sdic[3] + sdic[4]
             result[m:, m:] = sdic[1] + sdic[5] - sdic[3] - sdic[7]
             return str(result[: n, : n].tolist())
-
+        def strassen_traditional(x, y):
+            result = []
+            for i in range(len(x)):
+                temp =[]
+                for j in range(len(y)):
+                    temp.append(0)
+                result.append(temp)
+            
+            for i in range(len(x)):
+                 for j in range(len(y[0])):
+                    for k in range(len(y)):
+                        result[i][j] += x[i][k] * y[k][j]
+        start_time = time.time()
         ans=strassen_algorithm(lock_connections,peer_connections,X,Y)
-        return str(ans)
+        end_time = time.time()
+        total_time = end_time-start_time
+        start_time = time.time()
+        ans_trad=strassen_traditional(X,Y)
+        end_time = time.time()
+        total_time_trad= end_time-start_time
+        ans = {
+            "ans" :str(ans),
+            "time_taken" :total_time,
+            "time_taken_trad":total_time_trad
+        }
+        return ans
 
     def fetch_peers(self):
         server=self.server_connection
         print("we are about to start computing")
         Input = "PEER-DETAILS"
         server.send(str.encode(Input))
-        res = server.recv(1024)
+        res = server.recv(4096)
         res = res.decode('utf-8')
         res = ast.literal_eval(res)
         self.peers_assigned=res
@@ -134,7 +158,7 @@ class peer:
             sleep(100)
             Input = "P"
             ClientMultiSocket.send(str.encode(Input))
-            res = ClientMultiSocket.recv(1024)
+            res = ClientMultiSocket.recv(4096)
             # print(res.decode('utf-8'))
         ClientMultiSocket.close()
 
@@ -149,7 +173,7 @@ class peer:
             ClientMultiSocket.connect((host, port))
         except socket.error as e:
             print(str(e))
-        res = ClientMultiSocket.recv(1024)
+        res = ClientMultiSocket.recv(4096)
         print(res)
         if(res.decode('utf-8')=="Approved"):
             print("Peer added to the list")
@@ -158,10 +182,10 @@ class peer:
             return
         Input=config['self']['ip']
         ClientMultiSocket.send(bytes(Input, 'utf-8'))
-        res = ClientMultiSocket.recv(1024)
+        res = ClientMultiSocket.recv(4096)
         Input=config['ports']['2008']
         ClientMultiSocket.send(bytes(Input, 'utf-8'))
-        res = ClientMultiSocket.recv(1024)
+        res = ClientMultiSocket.recv(4096)
         self.server_connection=ClientMultiSocket
         peer.server_communication(self,ClientMultiSocket)
         
@@ -220,16 +244,16 @@ class peer:
             print("connected to",Client)
             try:
                 Client.sendall(b"Approved by peer")
-                X = Client.recv(2048)
+                X = Client.recv(4096)
                 X = X.decode('utf-8')
                 X = ast.literal_eval((X))
                 Client.sendall(str.encode("M1"))
-                Y = Client.recv(2048)
+                Y = Client.recv(4096)
                 Y = Y.decode('utf-8')
                 Y = ast.literal_eval((Y))
                 Client.sendall(str.encode(str(self.peer_calculation(X,Y).tolist())))
                 # connection.sendall(str.encode(str(Y)))
-                stat = Client.recv(2048)
+                stat = Client.recv(4096)
                 # print("y->",X+Y)
             except:
                 continue
@@ -252,6 +276,9 @@ class peer:
 
     def cal_starter(X,Y):
         p.fetch_peers()
+        ans = p.start_compute(X,Y)
+        print(ans)
+        # print(total_time)
         return p.start_compute(X,Y)
 
 p= peer()
