@@ -3,8 +3,10 @@ from flask import Flask, render_template, request
 import json
 from threading import Thread
 import configparser
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/')
 def hello():
