@@ -8,13 +8,13 @@ networks:
 services:
   app:
     build: ./app
+    environment:
+    - PYTHONUNBUFFERED=1
     networks:
     - peercmpe273
     ports:
-    - 10565:5000
-    - 59527:2008
+    - 32592:5000
+    - 53162:2008
     volumes:
     - ./info.ini:/app/info.ini
-    environment:
-    - PYTHONUNBUFFERED=1
 version: '2.2'
