@@ -121,6 +121,11 @@ class peer:
                  for j in range(len(y[0])):
                     for k in range(len(y)):
                         result[i][j] += x[i][k] * y[k][j]
+
+        start_time = time.time()
+        ans_trad=strassen_traditional(X,Y)
+        end_time = (time.time())
+        total_time_trad= (end_time-start_time)
         start_time = time.time()
         ans_trad=strassen_traditional(X,Y)
         end_time = (time.time())
