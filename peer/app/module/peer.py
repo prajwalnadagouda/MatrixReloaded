@@ -117,27 +117,22 @@ class peer:
                 for j in range(len(y)):
                     temp.append(0)
                 result.append(temp)
+
             for i in range(len(x)):
                  for j in range(len(y[0])):
                     for k in range(len(y)):
                         result[i][j] += x[i][k] * y[k][j]
+
 
         start_time = time.time()
         ans_trad=strassen_traditional(X,Y)
         end_time = (time.time())
         total_time_trad= (end_time-start_time)
         start_time = time.time()
-        ans_trad=strassen_traditional(X,Y)
-        end_time = (time.time())
-        total_time_trad= (end_time-start_time)
-        start_time = time.time()
-        ans_trad=strassen_traditional(X,Y)
-        end_time = time.time()
-        total_time_trad= end_time-start_time
-        start_time = time.time()
         ans=strassen_algorithm(lock_connections,peer_connections,X,Y)
         end_time = time.time()
         total_time = (end_time-start_time)/10
+
         ans = {
             "ans" :str(ans),
             "time_taken" :total_time,

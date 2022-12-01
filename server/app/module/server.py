@@ -69,6 +69,7 @@ class server:
         ServerSideSocket.listen(5)
         while True:
             Client, address = ServerSideSocket.accept()
+
             Client.sendall(b"Processing")
             ip = Client.recv(2048)
             ip = ip.decode('utf-8')
