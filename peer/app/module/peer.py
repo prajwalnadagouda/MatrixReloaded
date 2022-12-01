@@ -231,7 +231,7 @@ class peer:
         result[: m, m:] = p1 + p2
         result[m:, : m] = p3 + p4
         result[m:, m:] = p1 + p5 - p3 - p7
-        return result[: n, : n]
+        return result[: n, : n-1]
 
     def peer_compute(self):
         config = configparser.ConfigParser()
