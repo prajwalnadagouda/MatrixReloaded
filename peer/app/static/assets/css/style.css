@@ -115,6 +115,7 @@ h6 {
 # Header
 --------------------------------------------------------------*/
 #header {
+  /* position: "absolute"; */
   height: 70px;
   transition: all 0.5s;
   z-index: 997;
@@ -386,7 +387,7 @@ h6 {
 }
 .child {
   display: inline-block;
-  padding: 1rem 1rem;
+  /* padding: 1rem 1rem; */
   vertical-align: middle;
 }
 .parents {
@@ -587,12 +588,8 @@ h6 {
 # Sections General
 --------------------------------------------------------------*/
 section {
-  padding: 60px 0;
+  /* padding: 60px 0; */
   overflow: hidden;
-}
-
-.section-title {
-  padding-bottom: 40px;
 }
 
 .section-title h2 {
