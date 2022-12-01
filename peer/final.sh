@@ -1,3 +1,3 @@
 #!/bin/bash
-python composer.py $1
+python3 composer.py $1 || python composer.py $1 
 # docker-compose up --build
