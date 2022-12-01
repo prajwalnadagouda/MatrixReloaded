@@ -13,8 +13,13 @@ services:
     networks:
     - peercmpe273
     ports:
+<<<<<<< HEAD
     - 32592:5000
     - 53162:2008
+=======
+    - 12195:5000
+    - 40895:2008
+>>>>>>> 5394c42 (Changed peer)
     volumes:
     - ./info.ini:/app/info.ini
 version: '2.2'

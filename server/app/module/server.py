@@ -17,7 +17,7 @@ class server:
         connection.send(str.encode('Server is working:'))
         while True:
             try:
-                data = connection.recv(2048)
+                data = connection.recv(4096)
                 data = data.decode('utf-8')
                 response = 'Server message: ' + data
                 if not data:
@@ -66,10 +66,10 @@ class server:
         while True:
             Client, address = ServerSideSocket.accept()
             Client.sendall(b"Approved")
-            ip = Client.recv(2048)
+            ip = Client.recv(4096)
             ip = ip.decode('utf-8')
             Client.sendall(b"Approved")
-            port = Client.recv(2048)
+            port = Client.recv(4096)
             port = port.decode('utf-8')
             self.peer_dict[(ip,address[1])]=port
             self.peer_availability[(ip,address[1])]=port
