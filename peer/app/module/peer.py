@@ -42,13 +42,13 @@ class peer:
             except socket.error as e:
                 print(str(e))
             
-            res = peer_connect.recv(4096)
+            res = peer_connect.recv(8192)
             res = res.decode('utf-8')
             if(res=="Approved by peer"):
                 peer_connect.send(bytes(str(X), 'utf-8'))
-                ans=peer_connect.recv(4096)
+                ans=peer_connect.recv(8192)
                 peer_connect.send(bytes(str(Y), 'utf-8'))
-                ans=peer_connect.recv(4096)
+                ans=peer_connect.recv(8192)
                 ans=ans.decode('utf-8')
                 peer_connect.send(bytes("done", 'utf-8'))
                 print(ans)
@@ -89,11 +89,6 @@ class peer:
             for temp in range(1,8):
                 peer_turn_ip=peer_connections[temp%peer_count][0]
                 peer_turn_port=peer_connections[temp%peer_count][1]
-                # a1=parallel_calls(lock_connections, sdic, temp, peer_turn_ip, peer_turn_port,list1[temp-1].tolist(), list2[temp-1].tolist())
-                # # return str(a1)
-                # a2=parallel_calls(lock_connections, sdic, temp+2, peer_turn_ip, peer_turn_port,list1[temp-1].tolist(), list2[temp-1].tolist())
-                # return str(a1)+str(a2)
-                # start_new_thread(parallel_calls, (lock_connections, sdic, temp,peer_turn,a, f - h))
                 processThread = Thread(target=parallel_calls, args=(lock_connections, sdic, temp, peer_turn_ip, peer_turn_port,list1[temp-1].tolist(), list2[temp-1].tolist()))
                 processThread.start()
                 # return parallel_calls(lock_connections, sdic, temp,peer_turn,list1[temp-1].tolist(), list2[temp-1].tolist())
@@ -128,6 +123,7 @@ class peer:
                     for k in range(len(y)):
                         result[i][j] += x[i][k] * y[k][j]
 
+
         start_time = time.time()
         ans_trad=strassen_traditional(X,Y)
         end_time = (time.time())
@@ -136,7 +132,7 @@ class peer:
         ans=strassen_algorithm(lock_connections,peer_connections,X,Y)
         end_time = time.time()
         total_time = (end_time-start_time)/10
-        
+
         ans = {
             "ans" :str(ans),
             "time_taken" :total_time,
@@ -149,7 +145,7 @@ class peer:
         print("we are about to start computing")
         Input = "PEER-DETAILS"
         server.send(str.encode(Input))
-        res = server.recv(4096)
+        res = server.recv(8192)
         res = res.decode('utf-8')
         res = ast.literal_eval(res)
         self.peers_assigned=res
@@ -161,7 +157,7 @@ class peer:
             sleep(100)
             Input = "P"
             ClientMultiSocket.send(str.encode(Input))
-            res = ClientMultiSocket.recv(4096)
+            res = ClientMultiSocket.recv(8192)
             # print(res.decode('utf-8'))
         ClientMultiSocket.close()
 
@@ -176,19 +172,28 @@ class peer:
             ClientMultiSocket.connect((host, port))
         except socket.error as e:
             print(str(e))
-        res = ClientMultiSocket.recv(4096)
-        print(res)
-        if(res.decode('utf-8')=="Approved"):
-            print("Peer added to the list")
+        res = ClientMultiSocket.recv(8192)
+        if(res.decode('utf-8')=="Processing"):
+            print("Peer addition is under process")
         else:
             print("Couldn't connect. Please retry later")
             return
         Input=config['self']['ip']
         ClientMultiSocket.send(bytes(Input, 'utf-8'))
-        res = ClientMultiSocket.recv(4096)
+
+        testmat1 = ClientMultiSocket.recv(8192)
+        testmat1 = ast.literal_eval((testmat1.decode('utf-8')))
+        ClientMultiSocket.send(bytes("Got", 'utf-8'))
+        testmat2 = ClientMultiSocket.recv(8192)
+        testmat2 = ast.literal_eval((testmat2.decode('utf-8')))
+        reply=peer.peer_calculation(self,testmat1,testmat2)
+        reply=str.encode(str(reply.tolist()))
+        ClientMultiSocket.send((reply))
+        approvalresponse = ClientMultiSocket.recv(8192)
+        print(approvalresponse.decode('utf-8'))
         Input=config['ports']['2008']
         ClientMultiSocket.send(bytes(Input, 'utf-8'))
-        res = ClientMultiSocket.recv(4096)
+        res = ClientMultiSocket.recv(8192)
         self.server_connection=ClientMultiSocket
         peer.server_communication(self,ClientMultiSocket)
         
@@ -247,16 +252,16 @@ class peer:
             print("connected to",Client)
             try:
                 Client.sendall(b"Approved by peer")
-                X = Client.recv(4096)
+                X = Client.recv(8192)
                 X = X.decode('utf-8')
                 X = ast.literal_eval((X))
                 Client.sendall(str.encode("M1"))
-                Y = Client.recv(4096)
+                Y = Client.recv(8192)
                 Y = Y.decode('utf-8')
                 Y = ast.literal_eval((Y))
                 Client.sendall(str.encode(str(self.peer_calculation(X,Y).tolist())))
                 # connection.sendall(str.encode(str(Y)))
-                stat = Client.recv(4096)
+                stat = Client.recv(8192)
                 # print("y->",X+Y)
             except:
                 continue

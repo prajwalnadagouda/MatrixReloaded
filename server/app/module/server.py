@@ -6,8 +6,11 @@ from multiprocessing import Process
 import sys
 from threading import Thread
 import json
+import ast
+from random import randrange
 
 class server:
+    thread_count = 0
     peer_dict={}
     peer_availability={}
     def __init__(self):
@@ -46,7 +49,9 @@ class server:
             self.peer_availability.pop(address)
         except:
             pass
-        print("gone")
+        self.thread_count-=1
+        print("A peer has exited. Current number of peers are-",self.thread_count,"\n")
+
         print(self.peer_dict)
 
 
@@ -56,7 +61,6 @@ class server:
         host = "0.0.0.0"
         print(host)
         port = 2006
-        thread_count = 0
         try:
             ServerSideSocket.bind((host, port))
         except socket.error as e:
@@ -65,21 +69,42 @@ class server:
         ServerSideSocket.listen(5)
         while True:
             Client, address = ServerSideSocket.accept()
-            Client.sendall(b"Approved")
-            ip = Client.recv(4096)
+
+            Client.sendall(b"Processing")
+            ip = Client.recv(2048)
             ip = ip.decode('utf-8')
-            Client.sendall(b"Approved")
-            port = Client.recv(4096)
+
+            #send test matrix 
+            randint=randrange(10)
+            m1=[[randint,randint],[randint,randint]]
+            Client.sendall(bytes(str(m1), 'utf-8'))
+            A = Client.recv(2048)
+            Client.sendall(bytes(str(m1), 'utf-8'))
+            res = Client.recv(2048)
+            res = ast.literal_eval(res.decode('utf-8'))
+            testvar=2*(randint**2)
+            m2=[[testvar,testvar],[testvar,testvar]]
+            print("Expected-",m2)
+            print("Received-",res)
+            
+            if(m2==res):
+                print("This peer will be approved")
+                Client.sendall(b"Approved")
+            else:
+                print("This peer will be rejected")
+                Client.sendall(b"Rejected")
+                continue
+            port = Client.recv(2048)
             port = port.decode('utf-8')
             self.peer_dict[(ip,address[1])]=port
             self.peer_availability[(ip,address[1])]=port
             address=(ip,address[1])
+
             print(self.peer_dict)
-            print(self.peer_availability)
             print('Connected to: ' + address[0] + ':' + str(address[1]))
             start_new_thread(server.peer_communication, (self, Client, address))
-            thread_count += 1
-            print('Thread Number: ' + str(thread_count))
+            self.thread_count += 1
+            print('Peer Number: ' + str(self.thread_count),"\n")
         ServerSideSocket.close()
 
     def starter():
