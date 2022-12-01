@@ -26,13 +26,13 @@ class server:
                 if not data:
                     break
                 if(data == "PEER-DETAILS"):
-                    print("Sharing details of a max of 7 peers")
+                    print("Sharing details of fellow peers")
                     res={}
                     count=0
                     for i in self.peer_availability:
                         res[i]=self.peer_availability[i]
                         count+=1
-                        if(count==8):
+                        if(count==15):
                             break
                     response=str(res)
                     print(response)
@@ -49,7 +49,6 @@ class server:
             pass
         self.thread_count-=1
         print("A peer has exited. Current number of peers are-",self.thread_count,"\n")
-
         print(self.peer_dict)
 
 
@@ -62,7 +61,7 @@ class server:
             ServerSideSocket.bind((host, port))
         except socket.error as e:
             print(str(e))
-        print('Socket is listening..')
+        print('Server is accepting peers')
         ServerSideSocket.listen(5)
         while True:
             try:
