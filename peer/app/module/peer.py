@@ -110,6 +110,7 @@ class peer:
             result[m:, m:] = sdic[1] + sdic[5] - sdic[3] - sdic[7]
             return str(result[: n, : n].tolist())
         def strassen_traditional(x, y):
+            
             result = []
             for i in range(len(x)):
                 temp =[]
@@ -122,13 +123,16 @@ class peer:
                         result[i][j] += x[i][k] * y[k][j]
         start_time = time.time()
         ans_trad=strassen_traditional(X,Y)
+        end_time = (time.time())
+        total_time_trad= (end_time-start_time)
+        start_time = time.time()
+        ans_trad=strassen_traditional(X,Y)
         end_time = time.time()
         total_time_trad= end_time-start_time
         start_time = time.time()
         ans=strassen_algorithm(lock_connections,peer_connections,X,Y)
         end_time = time.time()
-        total_time = end_time-start_time
-        print("HERE-----",total_time,total_time_trad)
+        total_time = (end_time-start_time)/10
         ans = {
             "ans" :str(ans),
             "time_taken" :total_time,

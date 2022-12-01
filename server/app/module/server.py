@@ -20,7 +20,7 @@ class server:
         connection.send(str.encode('Server is working:'))
         while True:
             try:
-                data = connection.recv(2048)
+                data = connection.recv(4096)
                 data = data.decode('utf-8')
                 response = 'Server message: ' + data
                 if not data:
