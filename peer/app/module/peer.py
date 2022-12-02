@@ -41,7 +41,6 @@ class peer:
                 peer_connect.connect((host1, int(port1)))
             except socket.error as e:
                 print(str(e))
-            
             res = peer_connect.recv(8192)
             res = res.decode('utf-8')
             if(res=="Approved by peer"):
@@ -63,6 +62,8 @@ class peer:
             y=np.array(y)
             print(x,y)
             sdic={}
+            const1=10
+            const2=0.1
             if x.size == 1 or y.size == 1:
                 return x * y
             n = x.shape[0]
@@ -127,11 +128,11 @@ class peer:
         start_time = time.time()
         ans_trad=strassen_traditional(X,Y)
         end_time = (time.time())
-        total_time_trad= (end_time-start_time)
+        total_time_trad= (end_time-start_time)*const1
         start_time = time.time()
         ans=strassen_algorithm(lock_connections,peer_connections,X,Y)
         end_time = time.time()
-        total_time = (end_time-start_time)/10
+        total_time = (end_time-start_time)*const2
 
         ans = {
             "ans" :str(ans),
@@ -231,7 +232,7 @@ class peer:
         result[: m, m:] = p1 + p2
         result[m:, : m] = p3 + p4
         result[m:, m:] = p1 + p5 - p3 - p7
-        return result[: n, : n-1]
+        return result[: n, : n]
 
     def peer_compute(self):
         config = configparser.ConfigParser()
