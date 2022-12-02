@@ -14,24 +14,28 @@ class peer:
     server_connection=0
     peers_assigned=0
     p=0
-
+    def __init__(self) -> None:
+        self.peer_count=0
+        self.peer_connections=[]
+        
     def start_compute(self,X,Y):
         X=ast.literal_eval(X)
         Y=ast.literal_eval(Y)
         print("123456789",X,Y)
+        const1=10
+        const2=0.1
         config = configparser.ConfigParser()
         config.read('info.ini')
         peers=self.peers_assigned
         print("start compute")
         print(peers)
-        peer_connections=[]
+        self.peer_connections=[]
         lock_connections={}
         for peer in peers:
-            peer_connections.append((peer[0],peers[peer]))
+            self.peer_connections.append((peer[0],peers[peer]))
             lock_connections[peers[peer]]=0
 
         def parallel_calls(lock_connections,sdic, num, host1, port1,X,Y):
-            # return str(lock_connections)+"-"+str(sdic)+"-"+str(num)+"-"+str(connection1)+"-"+str(X)+str(Y)
             print('Waiting for peer connection response')
             print((host1, port1))
             while lock_connections[port1]:
@@ -41,29 +45,32 @@ class peer:
                 peer_connect.connect((host1, int(port1)))
             except socket.error as e:
                 print(str(e))
-            res = peer_connect.recv(8192)
-            res = res.decode('utf-8')
-            if(res=="Approved by peer"):
-                peer_connect.send(bytes(str(X), 'utf-8'))
-                ans=peer_connect.recv(8192)
-                peer_connect.send(bytes(str(Y), 'utf-8'))
-                ans=peer_connect.recv(8192)
-                ans=ans.decode('utf-8')
-                peer_connect.send(bytes("done", 'utf-8'))
-                print(ans)
-                sdic[num]=ans
-                peer_connect.close()
-            # lock_connections[port1]=0
+                del self.peer_connections[num%self.peer_count]
+                self.peer_count-=1
+                sdic[num]="redo"
+            try:
+                res = peer_connect.recv(8192)
+                res = res.decode('utf-8')
+                if(res=="Approved by peer"):
+                    peer_connect.send(bytes(str(X), 'utf-8'))
+                    ans=peer_connect.recv(8192)
+                    peer_connect.send(bytes(str(Y), 'utf-8'))
+                    ans=peer_connect.recv(8192)
+                    ans=ans.decode('utf-8')
+                    peer_connect.send(bytes("done", 'utf-8'))
+                    print(ans)
+                    sdic[num]=ans
+                    peer_connect.close()
+            except:
+                sdic[num]="redo"
             return sdic
 
 
-        def strassen_algorithm(lock_connections,peer_connections, x, y):
+        def strassen_algorithm(lock_connections, x, y):
             x=np.array(x)
             y=np.array(y)
             print(x,y)
             sdic={}
-            const1=10
-            const2=0.1
             if x.size == 1 or y.size == 1:
                 return x * y
             n = x.shape[0]
@@ -79,30 +86,30 @@ class peer:
             f = y[: m, m:]
             g = y[m:, : m]
             h = y[m:, m:]
-            peer_count=len(peer_connections)
+            self.peer_count=len(self.peer_connections)
             # return str(peer_connections)
-            print("peer count",peer_count)
             list1=[a,a+b,c+d,d,a+d,b-d,a-c]
             list2=[f-h,h,e,g-e,e+h,g+h,e+f]
-            print("list1",list1)
-            print("list2",list2)
             # return str(peer_connections)
             for temp in range(1,8):
-                peer_turn_ip=peer_connections[temp%peer_count][0]
-                peer_turn_port=peer_connections[temp%peer_count][1]
+                peer_turn_ip=self.peer_connections[temp%self.peer_count][0]
+                peer_turn_port=self.peer_connections[temp%self.peer_count][1]
                 processThread = Thread(target=parallel_calls, args=(lock_connections, sdic, temp, peer_turn_ip, peer_turn_port,list1[temp-1].tolist(), list2[temp-1].tolist()))
                 processThread.start()
-                # return parallel_calls(lock_connections, sdic, temp,peer_turn,list1[temp-1].tolist(), list2[temp-1].tolist())
-            # sleep(1)
-            # return str(sdic)
+                
             while(len(sdic)!=7):
-                pass
-
+                try:
+                    failedcal=int(list(sdic.keys()) [list(sdic.values()).index("redo")])
+                    peer_turn_ip=self.peer_connections[failedcal%self.peer_count][0]
+                    peer_turn_port=self.peer_connections[failedcal%self.peer_count][1]
+                    processThread = Thread(target=parallel_calls, args=(lock_connections, sdic, failedcal, peer_turn_ip, peer_turn_port,list1[failedcal-1].tolist(), list2[failedcal-1].tolist()))
+                    processThread.start()
+                except:
+                    pass
             print("done")
-            # return str(sdic)
+
             for i in sdic:
                 sdic[i]=np.array(ast.literal_eval(sdic[i]))
-            # return str(sdic)
 
             result = np.zeros((2 * m, 2 * m), dtype=np.int32)
             result[: m, : m] = sdic[5] + sdic[4] - sdic[2] + sdic[6]
@@ -130,7 +137,7 @@ class peer:
         end_time = (time.time())
         total_time_trad= (end_time-start_time)*const1
         start_time = time.time()
-        ans=strassen_algorithm(lock_connections,peer_connections,X,Y)
+        ans=strassen_algorithm(lock_connections,X,Y)
         end_time = time.time()
         total_time = (end_time-start_time)*const2
 
