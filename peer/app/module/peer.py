@@ -49,13 +49,13 @@ class peer:
                 self.peer_count-=1
                 sdic[num]="redo"
             try:
-                res = peer_connect.recv(8192)
+                res = peer_connect.recv(100000)
                 res = res.decode('utf-8')
                 if(res=="Approved by peer"):
                     peer_connect.send(bytes(str(X), 'utf-8'))
-                    ans=peer_connect.recv(8192)
+                    ans=peer_connect.recv(100000)
                     peer_connect.send(bytes(str(Y), 'utf-8'))
-                    ans=peer_connect.recv(8192)
+                    ans=peer_connect.recv(100000)
                     ans=ans.decode('utf-8')
                     peer_connect.send(bytes("done", 'utf-8'))
                     print(ans)
@@ -153,7 +153,7 @@ class peer:
         print("we are about to start computing")
         Input = "PEER-DETAILS"
         server.send(str.encode(Input))
-        res = server.recv(8192)
+        res = server.recv(100000)
         res = res.decode('utf-8')
         res = ast.literal_eval(res)
         self.peers_assigned=res
@@ -165,7 +165,7 @@ class peer:
             sleep(100)
             Input = "P"
             ClientMultiSocket.send(str.encode(Input))
-            res = ClientMultiSocket.recv(8192)
+            res = ClientMultiSocket.recv(100000)
             # print(res.decode('utf-8'))
         ClientMultiSocket.close()
 
@@ -180,7 +180,7 @@ class peer:
             ClientMultiSocket.connect((host, port))
         except socket.error as e:
             print(str(e))
-        res = ClientMultiSocket.recv(8192)
+        res = ClientMultiSocket.recv(100000)
         if(res.decode('utf-8')=="Processing"):
             print("Peer addition is under process")
         else:
@@ -189,19 +189,19 @@ class peer:
         Input=config['self']['ip']
         ClientMultiSocket.send(bytes(Input, 'utf-8'))
 
-        testmat1 = ClientMultiSocket.recv(8192)
+        testmat1 = ClientMultiSocket.recv(100000)
         testmat1 = ast.literal_eval((testmat1.decode('utf-8')))
         ClientMultiSocket.send(bytes("Got", 'utf-8'))
-        testmat2 = ClientMultiSocket.recv(8192)
+        testmat2 = ClientMultiSocket.recv(100000)
         testmat2 = ast.literal_eval((testmat2.decode('utf-8')))
         reply=peer.peer_calculation(self,testmat1,testmat2)
         reply=str.encode(str(reply.tolist()))
         ClientMultiSocket.send((reply))
-        approvalresponse = ClientMultiSocket.recv(8192)
+        approvalresponse = ClientMultiSocket.recv(100000)
         print(approvalresponse.decode('utf-8'))
         Input=config['ports']['2008']
         ClientMultiSocket.send(bytes(Input, 'utf-8'))
-        res = ClientMultiSocket.recv(8192)
+        res = ClientMultiSocket.recv(100000)
         self.server_connection=ClientMultiSocket
         peer.server_communication(self,ClientMultiSocket)
         
@@ -260,16 +260,16 @@ class peer:
             print("connected to",Client)
             try:
                 Client.sendall(b"Approved by peer")
-                X = Client.recv(8192)
+                X = Client.recv(100000)
                 X = X.decode('utf-8')
                 X = ast.literal_eval((X))
                 Client.sendall(str.encode("M1"))
-                Y = Client.recv(8192)
+                Y = Client.recv(100000)
                 Y = Y.decode('utf-8')
                 Y = ast.literal_eval((Y))
                 Client.sendall(str.encode(str(self.peer_calculation(X,Y).tolist())))
                 # connection.sendall(str.encode(str(Y)))
-                stat = Client.recv(8192)
+                stat = Client.recv(100000)
                 # print("y->",X+Y)
             except:
                 continue
