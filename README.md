@@ -5,12 +5,20 @@ The problems addressed as part of this project is reducing the time required to 
 
 
 PEER
+
+
 To start the peer first navigate to peer directory
-run "./final.sh X.X.X.X" where X.X.X.X is ip address of server
+
+Run "./final.sh X.X.X.X" where X.X.X.X is ip address of server
+
 Later run docker-compose up --build.
 
 Server
+
+
+
 To start the peer first navigate to server directory
+
 Later run docker-compose up --build.
 
 Note :- To check the website url please run docker ps.
