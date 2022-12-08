@@ -40,20 +40,10 @@ services:
         ports:
             - "{}:5000"
             - "{}:2008"
-        networks:
-            - peercmpe273
         volumes:
             - ./info.ini:/app/info.ini
         environment:
             - PYTHONUNBUFFERED=1
-
-networks:
-    peercmpe273:
-        driver: bridge
-        ipam:
-            driver: default
-            config:
-                - subnet: 172.59.0.0/16
 """
 names_yaml=names_yaml.format(p1,p2)
 names = yaml.safe_load(names_yaml)
