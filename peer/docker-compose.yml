@@ -13,8 +13,8 @@ services:
     networks:
     - peercmpe273
     ports:
-    - 31913:5000
-    - 60845:2008
+    - 34509:5000
+    - 62761:2008
     volumes:
     - ./info.ini:/app/info.ini
 version: '2.2'
