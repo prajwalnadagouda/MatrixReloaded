@@ -1,20 +1,11 @@
-networks:
-  peercmpe273:
-    driver: bridge
-    ipam:
-      config:
-      - subnet: 172.59.0.0/16
-      driver: default
 services:
   app:
     build: ./app
     environment:
     - PYTHONUNBUFFERED=1
-    networks:
-    - peercmpe273
     ports:
-    - 34509:5000
-    - 62761:2008
+    - 22898:5000
+    - 30374:2008
     volumes:
     - ./info.ini:/app/info.ini
 version: '2.2'
