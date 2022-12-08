@@ -36,6 +36,92 @@ h6 {
 # Back to top button
 --------------------------------------------------------------*/
 /* CSS */
+
+.input-edit {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+#results:hover .input-edit {
+  opacity: 1;
+}
+
+.input-edits {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+#results:hover .input-edits {
+  opacity: 1;
+}
+.copy-area {
+  background-color: rgba(42, 44, 57, 0.9);
+  position: absolute;
+  /* top: 30%; */
+  left: 23%;
+  /* transform: translate(-50%, -50%); */
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  /* background-color: white; */
+  /* padding-top: 30px; */
+}
+
+.copy-area textarea {
+  box-sizing: border-box;
+  background-color: rgba(42, 44, 57, 0.9);
+  color: white;
+  /* height: 200px; */
+  resize: none;
+  border: none;
+  outline: none;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.copy-area .input-edit button {
+  position: absolute;
+  padding: 5px 10px;
+  font-size: 15px;
+  color: white;
+  right: 105px;
+  top: 10px;
+  border: 1px solid gray;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: rgba(42, 44, 57, 0.9);
+}
+.copy-area .input-edits button {
+  position: absolute;
+  padding: 5px 10px;
+  font-size: 15px;
+  color: white;
+  right: 10px;
+  top: 10px;
+  border: 1px solid gray;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: rgba(42, 44, 57, 0.9);
+}
+.copy-area .input-edit button:active {
+  background-color: rgba(42, 44, 57, 0.9);
+  color: #fff;
+}
+
+.copy-area .input-edit button::before {
+  content: "Copy";
+  font-size: 15px;
+  display: none;
+}
+
+.copy-area.active .input-edit button::before {
+  display: block;
+}
+
+.copy-area .input-edits button:active {
+  background-color: rgba(42, 44, 57, 0.9);
+  color: #fff;
+}
+
 .button-89 {
   --b: 3px; /* border thickness */
   --s: 0.45em; /* size of the corner */
