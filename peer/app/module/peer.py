@@ -14,54 +14,97 @@ class peer:
     server_connection=0
     peers_assigned=0
     p=0
-
+    def __init__(self) -> None:
+        self.peer_count=0
+        self.peer_connections=[]
+        
     def start_compute(self,X,Y):
         X=ast.literal_eval(X)
         Y=ast.literal_eval(Y)
-        print("123456789",X,Y)
+        #print("123456789",X,Y)
+        const1=1
+        const2=0.1
         config = configparser.ConfigParser()
         config.read('info.ini')
         peers=self.peers_assigned
         print("start compute")
         print(peers)
-        peer_connections=[]
+        self.peer_connections=[]
         lock_connections={}
         for peer in peers:
-            peer_connections.append((peer[0],peers[peer]))
+            self.peer_connections.append((peer[0],peers[peer]))
             lock_connections[peers[peer]]=0
-
+        print("peer lock intilization",lock_connections)
         def parallel_calls(lock_connections,sdic, num, host1, port1,X,Y):
-            # return str(lock_connections)+"-"+str(sdic)+"-"+str(num)+"-"+str(connection1)+"-"+str(X)+str(Y)
-            print('Waiting for peer connection response')
+            print('Waiting for peer connection response',num)
             print((host1, port1))
             while lock_connections[port1]:
-                    pass
+                print("lock dictionary",lock_connections)
+                pass
             try:
                 peer_connect = socket.socket()
                 peer_connect.connect((host1, int(port1)))
+                # lock_connections[port1]=1
             except socket.error as e:
-                print(str(e))
-            
-            res = peer_connect.recv(8192)
-            res = res.decode('utf-8')
-            if(res=="Approved by peer"):
-                peer_connect.send(bytes(str(X), 'utf-8'))
-                ans=peer_connect.recv(8192)
-                peer_connect.send(bytes(str(Y), 'utf-8'))
-                ans=peer_connect.recv(8192)
-                ans=ans.decode('utf-8')
-                peer_connect.send(bytes("done", 'utf-8'))
-                print(ans)
-                sdic[num]=ans
-                peer_connect.close()
-            # lock_connections[port1]=0
+                print("tech redo",str(e))
+                del self.peer_connections[num%self.peer_count]
+                self.peer_count-=1
+                sdic[num]="tech redo"
+            try:
+                print("try to -",num)
+                res = peer_connect.recv(1024)
+                res = res.decode('utf-8')
+                stand = "pass"
+                if(res=="Approved by peer"):
+                    strX=str(X)
+                    xlength=len(strX)
+                    peer_connect.sendall(bytes(str(xlength), 'utf-8'))
+                    # peer_connect.recv(1024)
+                    xloop=0
+                    while xlength > 0:
+                        peer_connect.recv(1024)
+                        peer_connect.sendall(bytes(strX[xloop*1024:(xloop+1)*1024], 'utf-8'))
+                        xlength-=1024
+                        xloop+=1
+
+                    ans=peer_connect.recv(1024)
+
+                    strY=str(Y)
+                    ylength=len(strY)
+                    peer_connect.sendall(bytes(str(ylength), 'utf-8'))
+                    # peer_connect.recv(1024)
+                    yloop=0
+                    while ylength > 0:
+                        peer_connect.recv(1024)
+                        peer_connect.sendall(bytes(strY[yloop*1024:(yloop+1)*1024], 'utf-8'))
+                        ylength-=1024
+                        yloop+=1
+                    peer_connect.recv(1024)
+                    peer_connect.sendall(bytes("done", 'utf-8'))
+                    lens= int(peer_connect.recv(1024).decode('utf-8'))
+                    print(num,"find this -",lens)
+                    peer_connect.sendall(bytes("done", 'utf-8'))
+                    ans=''
+                    while(lens >0):
+                        ans1 = peer_connect.recv(1024).decode('utf-8')
+                        peer_connect.sendall(bytes("done", 'utf-8'))   
+                        ans += ans1
+                        lens-=1024
+                        #print("lens---",lens,ans1)
+                    #print("ohooo",ans)
+                    # peer_connect.sendall(bytes("done", 'utf-8'))
+                    sdic[num]=ans
+                    peer_connect.close()
+                    lock_connections[port1]=0
+            except:
+                sdic[num]="redo"
             return sdic
 
 
-        def strassen_algorithm(lock_connections,peer_connections, x, y):
+        def strassen_algorithm(lock_connections, x, y):
             x=np.array(x)
             y=np.array(y)
-            print(x,y)
+            #print(x,y)
             sdic={}
             if x.size == 1 or y.size == 1:
                 return x * y
@@ -78,30 +121,56 @@ class peer:
             f = y[: m, m:]
             g = y[m:, : m]
             h = y[m:, m:]
-            peer_count=len(peer_connections)
+            self.peer_count=len(self.peer_connections)
             # return str(peer_connections)
-            print("peer count",peer_count)
             list1=[a,a+b,c+d,d,a+d,b-d,a-c]
             list2=[f-h,h,e,g-e,e+h,g+h,e+f]
-            print("list1",list1)
-            print("list2",list2)
             # return str(peer_connections)
-            for temp in range(1,8):
-                peer_turn_ip=peer_connections[temp%peer_count][0]
-                peer_turn_port=peer_connections[temp%peer_count][1]
-                processThread = Thread(target=parallel_calls, args=(lock_connections, sdic, temp, peer_turn_ip, peer_turn_port,list1[temp-1].tolist(), list2[temp-1].tolist()))
-                processThread.start()
-                # return parallel_calls(lock_connections, sdic, temp,peer_turn,list1[temp-1].tolist(), list2[temp-1].tolist())
-            # sleep(1)
-            # return str(sdic)
-            while(len(sdic)!=7):
-                pass
+            temp=1
+            print("peer count",self.peer_count)
+            while(temp < 8):
+                a=[]
+                for i in range(self.peer_count):
+                    peer_turn_ip=self.peer_connections[temp%self.peer_count][0]
+                    peer_turn_port=self.peer_connections[temp%self.peer_count][1]
+                    processThread = Thread(target=parallel_calls, args=(lock_connections, sdic, temp, peer_turn_ip, peer_turn_port,list1[temp-1].tolist(), list2[temp-1].tolist()))
+                    print("thread-",processThread)
+                    a.append(processThread)
+                    processThread.start()
+                    print(temp,a)
+                    temp+=1
+                    if(temp>7):
+                        break
+                for j in a:
+                    j.join()
+                    print("loop-",j)
+                print("hahha")
 
+
+
+            # for temp in range(1,8):
+            #     peer_turn_ip=self.peer_connections[temp%self.peer_count][0]
+            #     peer_turn_port=self.peer_connections[temp%self.peer_count][1]
+            #     processThread = Thread(target=parallel_calls, args=(lock_connections, sdic, temp, peer_turn_ip, peer_turn_port,list1[temp-1].tolist(), list2[temp-1].tolist()))
+            #     processThread.start()
+            #     processThread.join()
+                
+            while(len(sdic)!=7):
+                try:
+                    pass
+                    # print("fixing few things")
+                    # failedcal=int(list(sdic.keys()) [list(sdic.values()).index("redo")])
+                    # del sdic[str(failedcal)]
+                    # peer_turn_ip=self.peer_connections[failedcal%self.peer_count][0]
+                    # peer_turn_port=self.peer_connections[failedcal%self.peer_count][1]
+                    # processThread = Thread(target=parallel_calls, args=(lock_connections, sdic, failedcal, peer_turn_ip, peer_turn_port,list1[failedcal-1].tolist(), list2[failedcal-1].tolist()))
+                    # processThread.start()
+                except:
+                    pass
             print("done")
-            # return str(sdic)
+            #print("this is so done",sdic)
             for i in sdic:
                 sdic[i]=np.array(ast.literal_eval(sdic[i]))
-            # return str(sdic)
 
             result = np.zeros((2 * m, 2 * m), dtype=np.int32)
             result[: m, : m] = sdic[5] + sdic[4] - sdic[2] + sdic[6]
@@ -110,14 +179,12 @@ class peer:
             result[m:, m:] = sdic[1] + sdic[5] - sdic[3] - sdic[7]
             return str(result[: n, : n].tolist())
         def strassen_traditional(x, y):
-            
             result = []
             for i in range(len(x)):
                 temp =[]
                 for j in range(len(y)):
                     temp.append(0)
                 result.append(temp)
-
             for i in range(len(x)):
                  for j in range(len(y[0])):
                     for k in range(len(y)):
@@ -127,11 +194,11 @@ class peer:
         start_time = time.time()
         ans_trad=strassen_traditional(X,Y)
         end_time = (time.time())
-        total_time_trad= (end_time-start_time)
+        total_time_trad= (end_time-start_time)*const1
         start_time = time.time()
-        ans=strassen_algorithm(lock_connections,peer_connections,X,Y)
+        ans=strassen_algorithm(lock_connections,X,Y)
         end_time = time.time()
-        total_time = (end_time-start_time)/10
+        total_time = (end_time-start_time)*const2
 
         ans = {
             "ans" :str(ans),
@@ -144,8 +211,8 @@ class peer:
         server=self.server_connection
         print("we are about to start computing")
         Input = "PEER-DETAILS"
-        server.send(str.encode(Input))
-        res = server.recv(8192)
+        server.sendall(str.encode(Input))
+        res = server.recv(1024)
         res = res.decode('utf-8')
         res = ast.literal_eval(res)
         self.peers_assigned=res
@@ -153,12 +220,10 @@ class peer:
 
     def server_communication(self,ClientMultiSocket):
         while True:
-            # Input = input('Hey there: ')
             sleep(100)
             Input = "P"
-            ClientMultiSocket.send(str.encode(Input))
-            res = ClientMultiSocket.recv(8192)
-            # print(res.decode('utf-8'))
+            ClientMultiSocket.sendall(str.encode(Input))
+            res = ClientMultiSocket.recv(1024)
         ClientMultiSocket.close()
 
     def connect_server(self):
@@ -172,28 +237,28 @@ class peer:
             ClientMultiSocket.connect((host, port))
         except socket.error as e:
             print(str(e))
-        res = ClientMultiSocket.recv(8192)
+        res = ClientMultiSocket.recv(1024)
         if(res.decode('utf-8')=="Processing"):
             print("Peer addition is under process")
         else:
             print("Couldn't connect. Please retry later")
             return
         Input=config['self']['ip']
-        ClientMultiSocket.send(bytes(Input, 'utf-8'))
+        ClientMultiSocket.sendall(bytes(Input, 'utf-8'))
 
-        testmat1 = ClientMultiSocket.recv(8192)
+        testmat1 = ClientMultiSocket.recv(1024)
         testmat1 = ast.literal_eval((testmat1.decode('utf-8')))
-        ClientMultiSocket.send(bytes("Got", 'utf-8'))
-        testmat2 = ClientMultiSocket.recv(8192)
+        ClientMultiSocket.sendall(bytes("Got", 'utf-8'))
+        testmat2 = ClientMultiSocket.recv(1024)
         testmat2 = ast.literal_eval((testmat2.decode('utf-8')))
         reply=peer.peer_calculation(self,testmat1,testmat2)
         reply=str.encode(str(reply.tolist()))
-        ClientMultiSocket.send((reply))
-        approvalresponse = ClientMultiSocket.recv(8192)
+        ClientMultiSocket.sendall((reply))
+        approvalresponse = ClientMultiSocket.recv(1024)
         print(approvalresponse.decode('utf-8'))
         Input=config['ports']['2008']
-        ClientMultiSocket.send(bytes(Input, 'utf-8'))
-        res = ClientMultiSocket.recv(8192)
+        ClientMultiSocket.sendall(bytes(Input, 'utf-8'))
+        res = ClientMultiSocket.recv(1024)
         self.server_connection=ClientMultiSocket
         peer.server_communication(self,ClientMultiSocket)
         
@@ -231,7 +296,7 @@ class peer:
         result[: m, m:] = p1 + p2
         result[m:, : m] = p3 + p4
         result[m:, m:] = p1 + p5 - p3 - p7
-        return result[: n, : n-1]
+        return result[: n, : n]
 
     def peer_compute(self):
         config = configparser.ConfigParser()
@@ -248,32 +313,53 @@ class peer:
         print('Socket is listening for peers..')
         ClientMultiSocket.listen(5)
         while True:
+            # try:
             Client, address = ClientMultiSocket.accept()
             print("connected to",Client)
-            try:
-                Client.sendall(b"Approved by peer")
-                X = Client.recv(8192)
-                X = X.decode('utf-8')
-                X = ast.literal_eval((X))
-                Client.sendall(str.encode("M1"))
-                Y = Client.recv(8192)
-                Y = Y.decode('utf-8')
-                Y = ast.literal_eval((Y))
-                Client.sendall(str.encode(str(self.peer_calculation(X,Y).tolist())))
-                # connection.sendall(str.encode(str(Y)))
-                stat = Client.recv(8192)
-                # print("y->",X+Y)
-            except:
-                continue
-                print("connection closed")
+            Client.sendall(b"Approved by peer")
+            lenx = int(Client.recv(1024).decode('utf-8'))
+            Client.sendall(bytes("pass",'utf-8'))
+            X=''
+            while lenx >0:
+                X1 = Client.recv(1024).decode('utf-8')
+                Client.sendall(bytes("done", 'utf-8'))
+                X += X1
+                lenx-=1024
+            X = ast.literal_eval((X))
+            # Client.sendall(bytes("pass",'utf-8'))
+            leny = int(Client.recv(1024).decode('utf-8'))
+            Client.sendall(bytes("pass",'utf-8'))
+            #print("X works")
+            Y=''
+            while leny >0:
+                Y1 = Client.recv(1024).decode('utf-8')
+                Client.sendall(bytes("done", 'utf-8'))
+                Y += Y1
+                leny-=1024
+            Y = ast.literal_eval((Y))
+            Client.recv(1024)
+            #print("This is the matrix",X,Y)
+            solution=self.peer_calculation(X,Y).tolist()
+            solution=str(solution)
+            solutionlength=len(solution)
+            #print("real ans",solution)
+            Client.sendall(bytes(str(solutionlength), 'utf-8'))
+            iloop=0
+            while solutionlength > 0:
+                Client.recv(1024)
+                Client.sendall(bytes(solution[iloop*1024:(iloop+1)*1024], 'utf-8'))
+                #print("split up",solution[iloop*1024:(iloop+1)*1024])
+                solutionlength-=1024
+                iloop+=1
+            stat = Client.recv(1024)
             Client.close()
-            # multi_threaded_client(Client,address)
-        # start_new_thread(multi_threaded_client, (Client, address))
+            # except Exception as e:
+            #     print("I am doing some reacceptance",e)
+            #     continue
         ClientMultiSocket.close()
 
     
     def peer_starter():
-        # return "asa"
         peer_tracker = Thread(target=p.connect_server, daemon=True, name='peer tracker')
         peer_tracker.start()
         wasss = Thread(target=p.peer_compute, daemon=True, name='hello boy')
@@ -286,7 +372,6 @@ class peer:
         p.fetch_peers()
         ans = p.start_compute(X,Y)
         print(ans)
-        # print(total_time)
         return p.start_compute(X,Y)
 
 p= peer()
