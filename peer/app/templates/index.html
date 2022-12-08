@@ -458,14 +458,19 @@
         var rows_seocndMatrix = $secondMatrix.length;
         var cols_firstMatrix = $firstMatrix[0].length;
         var cols_seocndMatrix = $secondMatrix[0].length;
+
+
+        console.log(rows_firstMatrix,cols_seocndMatrix)
         if (rows_seocndMatrix != cols_firstMatrix) {
           output1 =
             "The matrices does not have format suitable to perform calculation";
-          
+              console.log(output1)          
         }
-        if (rows_seocndMatrix != cols_firstMatrix) {
+        if (rows_firstMatrix != cols_seocndMatrix) {
           output2 =
             "The matrices does not have format suitable to perform calculation";
+            console.log(output2)          
+
           
         }
         if (output1 != "") {
